@@ -1,27 +1,245 @@
-# Ng2SimpleMqLib
+# ng2-simple-mq
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.2.2.
+A simple message queue for Angular 2 inter-component communication base on RxJS.
 
-## Development server
+Name/ID(string) base API. RxJS object not exposed.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+(This package does not communicate with RabbitMQ or any other message queue software/service.)
 
-## Code scaffolding
+> To enable faster update, ng2-simple-mq switched to Angular CLI starting 8.2.0 and use new repository https://github.com/J-Siu/ng2-simple-mq-lib/
+>
+> Project contains both library and example.
+>
+> All version < 8.2.0 are in old repository https://github.com/J-Siu/ng2-simple-mq/
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Index
 
-## Build
+- [Install](#install)
+- [Usage](#usage)
+  - ["noImplicitAny": false](#noimplicitany-false)
+  - [Import into Angular 2 application (typescript)](#import-into-angular-2-application-typescript)
+  - [API](#api)
+    - [newQueue(name: string): boolean](#newqueuename-string-boolean)
+    - [delQueue(name: string): boolean](#delqueuename-string-boolean)
+    - [getQueue(): string[]](#getqueue-string)
+    - [getSubscription(): string[]](#getsubscription-string)
+    - [publish(name: string, msg: any, lazy = true): boolean](#publishname-string-msg-any-lazy--true-boolean)
+    - [subscribe(name: string, callback: (any) => void, lazy = true): string](#subscribename-string-callback-any--void-lazy--true-string)
+    - [unsubscribe(id: string): boolean](#unsubscribeid-string-boolean)
+- [Example](#example)
+- [Contributors](#contributors)
+- [Changelog](#changelog)
+- [License](#license)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+## Install
 
-## Running unit tests
+```sh
+npm install ng2-simple-mq
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Usage
 
-## Running end-to-end tests
+### "noImplicitAny": false
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Must set `"noImplicitAny": false` in application __tsconfig.json__. Else following error may occur at build time:
 
-## Further help
+  error TS7006: Parameter 'any' implicitly has an 'any' type
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+### Import into Angular 2 application (typescript)
+
+`ng2-simple-mq` is implemented as Angular 2 injectable service name __SimpleMQ__.
+
+__For module using SimpleMQ__
+
+Add `SimpleMQ` into module providers (eg. [app.module.ts](https://github.com/J-Siu/ng2-simple-mq-example/blob/master/app/app.module.ts)).
+
+```javascript
+import { SimpleMQ } from 'ng2-simple-mq';
+
+@NgModule({
+  providers: [SimpleMQ]
+})
+```
+
+__For each child component using SimpleMQ__
+
+```javascript
+import { SimpleMQ } from 'ng2-simple-mq';
+
+export class ChildComponent {
+
+  constructor(private smq: SimpleMQ) { }
+
+}
+```
+
+### API
+
+##### newQueue(name: string): boolean
+
+`newQueue` will create queue `name`.
+
+Return `false` if queue `name` exist.
+
+```javascript
+this.smq.newQueue('broadcast');
+```
+
+##### delQueue(name: string): boolean
+
+`delQueue` will delete queue `name`.
+
+Return `false` if queue `name` does not exist.
+
+```javascript
+this.smq.delQueue('broadcast');
+```
+
+##### getQueue(): string[]
+
+`getQueue` will return all queue name in string array.
+
+```javascript
+let q: string[] = this.smq.getQueue();
+```
+
+##### getSubscription(): string[]
+
+`getSubscription` will return all subscription id in string array.
+
+```javascript
+let ids: string[] = this.st.getSubscription();
+```
+
+##### publish(name: string, msg: any, lazy = true): boolean
+
+`publish` will put `msg` into queue `name`.
+
+If `lazy = true`(default), queue `name` will be created automatically if not exist yet.
+
+Return true if successful.
+
+Return false if any of following is true:
+
+- `lazy = false`, and queue `name` does not exist.
+- `name` is undefined.
+- `msg` is undefined.
+
+```javascript
+// lazy mode
+message = 'This is a broadcast message';
+this.smq.publish('broadcast',message);
+```
+
+##### subscribe(name: string, callback: (any) => void, lazy = true): string
+
+`subscribe` will link `callback` function to queue `name`. Whenever queue `name` receive a new message, `callback` will be invoked.
+
+If `lazy = true`(default), queue `name` will be created automatically if not exist yet.
+
+Return subscription id if successful.
+
+Return empty string if any of following is true:
+
+- `lazy = false`, and queue `name` does not exist.
+- `name` is undefined.
+- `callback` is undefined.
+
+Either use Lambda(fat arrow) in typescript to pass in callback or bind `this` to another variable in javascript, else `this` scope will be lost.
+
+__Lambda(fat arrow)__
+
+```javascript
+broadcastMsg;
+
+ngOnInit() {
+  // lazy mode
+  this.smq.subscribe('broadcast', e => this.receiveBroadcast(e));
+}
+
+receiveBroadcast(m) {
+  this.broadcastMsg = m;
+}
+```
+
+##### unsubscribe(id: string): boolean
+
+`unsubscribe` will cancel subscription using `id`.
+
+`unsubscribe` will return false if `id` is undefined or `id` is not found in subscription list.
+
+```javascript
+id: string;
+
+this.st.unsubscribe(this.id);
+```
+
+## Example
+
+You will need Angular CLI to build the library and run the example.
+
+```sh
+git clone https://github.com/J-Siu/ng2-simple-mq-lib.git
+cd ng2-simple-mq-lib
+npm i
+ng build ng2-simple-mq
+ng serve --open
+```
+
+## Contributors
+
+- [John Sing Dao Siu](https://github.com/J-Siu)
+
+## Changelog
+
+- 0.1.0-alpha - Initial
+- 0.1.1-alpha - Add Readme.md
+- 0.1.2-alpha - Readme.md fix
+- 0.1.3-alpha - Fix components.js
+- 0.2.0
+  - Complete Readme.md
+  - Fix index.js and index.d.ts
+- 0.2.1
+  - API change
+  - newQueue return boolean
+  - API new
+  - delQueue
+  - getSubscription
+  - unsubscribe
+- 0.2.2
+  - Support Angular2 RC5
+- 0.2.3
+  - Fix Readme.md
+- 1.2.4
+  - Support Angular2 ^2.0.0
+  - Clean up package
+- 1.2.5
+  - Add Plunker example
+- 1.2.6
+  - Support Angular2 ^2.4.1
+  - Replace node-uuid with angular2-uuid
+  - Add instruction for `"noImplicitAny": false`
+*- 1.2.7
+  - Due to the rapid release cycle of Angular, to minimize
+    update purely due to `peerDependencies`,
+    it is modified as follow:
+     `"peerDependencies": { "@angular/core": ">2.4.1" }`
+- 1.2.8
+  - Update to support Angular 4.3.1. Please use previous version for Angular 2.x.x.
+- 1.2.9
+  - Fix issue#2 `delQueue`
+- 8.2.0
+  - Switch to Angular Cli for faster future update.
+  - Include example in project
+
+## License
+
+The MIT License
+
+Copyright (c) 2017
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
