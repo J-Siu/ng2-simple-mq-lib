@@ -1,10 +1,10 @@
-A simple message queue for Angular inter-component communication base on RxJS.
+A message queue service for Angular inter-component communication base on RxJS.
 
 Name/ID(string) base API. RxJS object not exposed.
 
 (This package does not communicate with RabbitMQ or any other message queue software/service.)
 
-> To enable faster update, ng2-simple-mq uses Angular CLI starting 8.2.0 and use new repository https://github.com/J-Siu/ng2-simple-mq-lib/ . Repository contains both library and example.
+> __ng2-simple-mq__ uses Angular CLI starting 8.2.0. New repository https://github.com/J-Siu/ng2-simple-mq-lib/ contains both library and example.
 >
 > Version < 8.2.0 are in old repository https://github.com/J-Siu/ng2-simple-mq/
 
@@ -226,7 +226,9 @@ ng serve --open
 - 8.2.0
   - Support Angular 8.2.0
   - Switch to Angular Cli for faster update
-  - Include example in project
+  - Include example
+- 8.2.1
+  - README.md clean up
 
 ### License
 
