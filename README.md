@@ -4,9 +4,9 @@ Name/ID(string) base API. RxJS object not exposed.
 
 (This package does not communicate with RabbitMQ or any other message queue software/service.)
 
-> __ng2-simple-mq__ uses Angular CLI starting 8.2.0. New repository https://github.com/J-Siu/ng2-simple-mq-lib/ contains both library and example.
+> __ng2-simple-mq__ uses Angular CLI starting 8.2.0. New repository [github.com/J-Siu/ng2-simple-mq-lib](//github.com/J-Siu/ng2-simple-mq-lib/) contains both library and example.
 >
-> Version < 8.2.0 are in old repository https://github.com/J-Siu/ng2-simple-mq/
+> Version < 8.2.0 are in old repository [github.com/J-Siu/ng2-simple-mq](//github.com/J-Siu/ng2-simple-mq/)
 
 <!-- TOC -->
 
@@ -15,13 +15,13 @@ Name/ID(string) base API. RxJS object not exposed.
   - [Module](#module)
   - [Component](#component)
 - [API](#api)
-  - [newQueue(name: string): boolean](#newqueuename-string-boolean)
-  - [delQueue(name: string): boolean](#delqueuename-string-boolean)
-  - [getQueue(): string[]](#getqueue-string)
-  - [getSubscription(): string[]](#getsubscription-string)
-  - [publish(name: string, msg: any, lazy = true): boolean](#publishname-string-msg-any-lazy--true-boolean)
-  - [subscribe(name: string, callback: (any) => void, lazy = true): string](#subscribename-string-callback-any--void-lazy--true-string)
-  - [unsubscribe(id: string): boolean](#unsubscribeid-string-boolean)
+  - [newQueuename: string: boolean](#newqueuename-string-boolean)
+  - [delQueuename: string: boolean](#delqueuename-string-boolean)
+  - [getQueue: string[]](#getqueue-string)
+  - [getSubscription: string[]](#getsubscription-string)
+  - [publishname: string, msg: any, lazy = true: boolean](#publishname-string-msg-any-lazy--true-boolean)
+  - [subscribename: string, callback: any => void, lazy = true: string](#subscribename-string-callback-any--void-lazy--true-string)
+  - [unsubscribeid: string: boolean](#unsubscribeid-string-boolean)
 - [Example](#example)
 - [Repository](#repository)
 - [Contributors](#contributors)
