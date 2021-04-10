@@ -1,14 +1,14 @@
 {
 	"name": "ng2-simple-mq",
-	"version": "9.1.0",
+	"version": "11.2.9",
 	"devDependencies": {
-    "angular2-uuid": "*"
-  },
-"peerDependencies": {
-		"@angular/common": "~9.1.0",
-		"@angular/core": "~9.1.0",
+		"angular2-uuid": "*"
+	},
+	"peerDependencies": {
+		"@angular/common": "~11.2.9",
+		"@angular/core": "~11.2.9",
 		"angular2-uuid": "*",
-		"rxjs": "~6.5.5"
+		"rxjs": "~6.6.0"
 	},
 	"description": "Angular 2 simple message queue for inter-component communication",
 	"license": "MIT",
